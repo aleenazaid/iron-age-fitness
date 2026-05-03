@@ -37,7 +37,7 @@ export default function GymPrograms() {
 
   useEffect(() => {
     const handler = (e: any) => {
-      setActive(exploreData[e.detail]);
+      setActive(exploreData[e.detail as keyof typeof exploreData]);
     };
 
     window.addEventListener("open-explore", handler);
