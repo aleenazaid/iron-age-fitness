@@ -4,6 +4,13 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { exploreData } from "@/components/ExplorePanel";
 
+type ProgramKey =
+  | "strength-foundation"
+  | "fat-loss-system"
+  | "athletic-performance"
+  | "body-recomposition"
+  | "recovery-protocol";
+
 const programs = [
   {
     title: "Strength Foundation",
@@ -34,26 +41,32 @@ const programs = [
 
 export default function GymPrograms() {
   const [active, setActive] = useState<
-  (typeof exploreData)[keyof typeof exploreData] | null
->(null);
+    (typeof exploreData)[keyof typeof exploreData] | null
+  >(null);
 
-useEffect(() => {
-  const handler = (e: any) => {
-    if (!e.detail) return;
+  useEffect(() => {
+    const handler = (e: CustomEvent<ProgramKey>) => {
+      if (!e.detail) return;
 
-    const key = e.detail as keyof typeof exploreData;
+      const key = e.detail;
 
-    if (exploreData[key]) {
-      setActive(exploreData[key]);
-    }
-  };
+      if (exploreData[key]) {
+        setActive(exploreData[key]);
+      }
+    };
 
-  window.addEventListener("open-explore", handler as EventListener);
+    window.addEventListener(
+      "open-explore",
+      handler as unknown as EventListener
+    );
 
-  return () => {
-    window.removeEventListener("open-explore", handler as EventListener);
-  };
-}, []);
+    return () => {
+      window.removeEventListener(
+        "open-explore",
+        handler as unknown as EventListener
+      );
+    };
+  }, []);
 
   return (
     <section
@@ -65,7 +78,6 @@ useEffect(() => {
 
       {/* HEADER */}
       <div className="text-center max-w-3xl mx-auto mb-16 px-6 relative z-10">
-
         <h2 className="text-4xl md:text-5xl font-bold">
           Built for Transformation
         </h2>
@@ -74,19 +86,14 @@ useEffect(() => {
           Structured programs designed like a performance system
         </p>
 
-        {/* subtle divider line */}
         <div className="mt-6 w-20 h-[2px] bg-white/20 mx-auto" />
       </div>
 
-      {/* 🔥 TIMELINE WRAPPER (bar starts here now) */}
+      {/* TIMELINE WRAPPER */}
       <div className="relative max-w-5xl mx-auto px-6">
-
-        {/* ORANGE BAR (NOW STARTS BELOW HEADER) */}
         <div className="absolute left-1/2 top-0 bottom-0 w-[4px] bg-[#C96A2B] -translate-x-1/2 rounded-full opacity-80" />
 
-        {/* PROGRAMS */}
         <div className="space-y-20">
-
           {programs.map((item, index) => {
             const isLeft = index % 2 === 0;
 
@@ -101,14 +108,10 @@ useEffect(() => {
                   isLeft ? "justify-start" : "justify-end"
                 }`}
               >
-                {/* CARD (SMALLER + CLEANER) */}
                 <div className="w-[38%] bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-5 hover:border-[#C96A2B] transition-all duration-300 hover:-translate-y-1">
-
                   <div className="w-8 h-1 bg-[#C96A2B] rounded-full mb-4" />
 
-                  <h3 className="text-lg font-semibold">
-                    {item.title}
-                  </h3>
+                  <h3 className="text-lg font-semibold">{item.title}</h3>
 
                   <p className="mt-2 text-sm text-white/60 leading-relaxed">
                     {item.desc}
@@ -117,8 +120,8 @@ useEffect(() => {
                   <button
                     onClick={() =>
                       window.dispatchEvent(
-                        new CustomEvent("open-explore", {
-                          detail: item.slug,
+                        new CustomEvent<ProgramKey>("open-explore", {
+                          detail: item.slug as ProgramKey,
                         })
                       )
                     }
@@ -130,15 +133,13 @@ useEffect(() => {
               </motion.div>
             );
           })}
-
         </div>
       </div>
 
-      {/* EXPLORE PANEL (UNCHANGED) */}
+      {/* EXPLORE PANEL */}
       {active && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 px-6">
           <div className="max-w-4xl w-full bg-[#111] border border-white/10 rounded-2xl p-10">
-
             <button
               onClick={() => setActive(null)}
               className="text-[#A3B18A] mb-6"
