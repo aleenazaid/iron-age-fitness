@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
+import { easeOut } from "framer-motion";
 
 const container = {
   hidden: {},
@@ -17,7 +18,10 @@ const item = {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.8, ease: "easeOut" },
+    transition: {
+  duration: 0.6,
+  ease: [0.25, 0.1, 0.25, 1],
+}
   },
 };
 
