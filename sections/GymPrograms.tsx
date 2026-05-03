@@ -33,18 +33,25 @@ const programs = [
 ];
 
 export default function GymPrograms() {
-  const [active, setActive] = useState<any>(null);
+  const [active, setActive] = useState<
+  (typeof exploreData)[keyof typeof exploreData] | null
+>(null);
 
 useEffect(() => {
   const handler = (e: any) => {
+    if (!e.detail) return;
+
     const key = e.detail as keyof typeof exploreData;
-    setActive(exploreData[key]);
+
+    if (exploreData[key]) {
+      setActive(exploreData[key]);
+    }
   };
 
-  window.addEventListener("open-explore", handler);
+  window.addEventListener("open-explore", handler as EventListener);
 
   return () => {
-    window.removeEventListener("open-explore", handler);
+    window.removeEventListener("open-explore", handler as EventListener);
   };
 }, []);
 
