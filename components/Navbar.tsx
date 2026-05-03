@@ -14,17 +14,16 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const items = ["home", "gym", "merch", "gallery", "testimonials", "contact"];
+  const items = ["home", "gym", "merch", "gallery", "testimonials", "contact"] as const;
 
-  const labels = {
-    home: "Home",
-    gym: "Programs",
-    merch: "Merch",
-    gallery: "Gallery",
-    testimonials: "Reviews",
-    contact: "Contact",
-  };
-
+  const labels: Record<(typeof items)[number], string> = {
+  home: "Home",
+  gym: "Programs",
+  merch: "Merch",
+  gallery: "Gallery",
+  testimonials: "Reviews",
+  contact: "Contact",
+};
   return (
     <motion.header
       initial={{ y: -60, opacity: 0 }}
